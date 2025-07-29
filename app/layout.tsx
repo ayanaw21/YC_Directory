@@ -11,7 +11,7 @@ import localFont from "next/font/local"
 //   variable: "--font-geist-mono",
 //   subsets: ["latin"],
 // });
-
+import 'easymde/dist/easymde.min.css'
 const workSans = localFont({
   src: [
     {
