@@ -50,7 +50,7 @@ const StartupCard = ({ post }: { post: StartupCardType }) => {
 					/>
 				</Link>
 			</div>
-			<Link href={`/startups/${_id}`}>
+			<Link href={`/startup/${_id}`}>
 				<p className="startup-card_desc">{description}</p>
 				{/* <img
 					src={image}
