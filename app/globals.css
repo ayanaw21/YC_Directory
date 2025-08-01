@@ -2,8 +2,8 @@
 layer(base);
 
 @import 'tailwindcss';
-/* @plugin "@tailwindcss/typography"
-@plugin "tailwindcss-animatee" */
+@plugin "@tailwindcss/typography" ;
+/* @plugin "tailwindcss-animatee" ; */
 @custom-variant dark (&:is(.dark *));
 
 /*
