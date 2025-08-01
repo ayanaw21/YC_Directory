@@ -1,4 +1,3 @@
-
 export const STARTUPS_QUERY = `*[_type == "startup" && defined(slug.current)] | order(_createdAt desc) {
   _id,
   slug,
@@ -15,7 +14,7 @@ export const STARTUPS_QUERY = `*[_type == "startup" && defined(slug.current)] | 
   title,
   view,
   _createdAt
-}`
+}`;
 
 export const STARTUP_BY_ID_QUERY = `*[_type == "startup" && _id == $id][0] |  {
   _id,
@@ -24,7 +23,8 @@ export const STARTUP_BY_ID_QUERY = `*[_type == "startup" && _id == $id][0] |  {
     _id,
     name,
     image,
-    bio
+    bio,
+    username
   },
   category,
   description,
@@ -33,4 +33,4 @@ export const STARTUP_BY_ID_QUERY = `*[_type == "startup" && _id == $id][0] |  {
   title,
   view,
   _createdAt
-}`
+}`;
