@@ -34,3 +34,6 @@ export const STARTUP_BY_ID_QUERY = `*[_type == "startup" && _id == $id][0] |  {
   view,
   _createdAt
 }`;
+
+export const STARTUP_VIEWS_QUERY = `*[_type == "startup" && _id == $id][0]{
+_id,view}`
