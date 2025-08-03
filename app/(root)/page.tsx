@@ -15,7 +15,7 @@ export default async function Home({
 	// const posts = await client.fetch(STARTUPS_QUERY);
 	const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY });
 	const session = await auth()
-	console.log("session: " ,session?.id);
+	console.log("session: " ,session);
 	return (
 		<>
 			<section className="pink_container">
