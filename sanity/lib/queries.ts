@@ -1,4 +1,33 @@
-export const STARTUPS_QUERY = `*[_type == "startup" && defined(slug.current)] | order(_createdAt desc) {
+// export const STARTUPS_QUERY = `*[_type == "startup" && defined(slug.current) && !defined($search) || title match $search || category match $search || author->name match $search] | order(_createdAt desc) {
+//   _id,
+//   slug,
+//   author->{
+//     _id,
+//     name,
+//     image,
+//     bio
+//   },
+//   category,
+//   description,
+//   image,
+//   pitch,
+//   title,
+//   view,
+//   _createdAt
+// }`;
+
+export const STARTUPS_QUERY = `
+*[
+  _type == "startup" &&
+  defined(slug.current) &&
+  (
+    !defined($search) ||
+    title match $search + "*" ||
+    description match $search + "*" ||
+    category match $search + "*" ||
+    author->name match $search + "*" 
+  )
+] | order(_createdAt desc) {
   _id,
   slug,
   author->{
@@ -14,7 +43,8 @@ export const STARTUPS_QUERY = `*[_type == "startup" && defined(slug.current)] | 
   title,
   view,
   _createdAt
-}`;
+}
+`;
 
 export const STARTUP_BY_ID_QUERY = `*[_type == "startup" && _id == $id][0] |  {
   _id,
