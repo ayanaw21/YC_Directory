@@ -5,55 +5,57 @@ import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/write-client";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    GitHub({
-      // You can add clientId and clientSecret here or in env variables
-    }),
-  ],
-  callbacks: {
-    async signIn({ user: { name, email, image }, profile}) {
-      if (!profile) return false;
-      const { id, login, bio } = profile;
-      const existingUser = await client
-        .withConfig({ useCdn: false })
-        .fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
-          id,
-        });
+	providers: [
+		GitHub({
+			clientId: process.env.AUTH_GITHUB_ID,
+			clientSecret: process.env.AUTH_GITHUB_SECRET,
+		}),
+	],
+	callbacks: {
+		async signIn({ user: { name, email, image }, profile }) {
+			if (!profile) return false;
+			const { id, login, bio } = profile;
+			const existingUser = await client
+				.withConfig({ useCdn: false })
+				.fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
+					id,
+				});
 
-      if (!existingUser) {
-        await writeClient.withConfig({ useCdn: false }).create({
-          _type: "author",
-          id,
-          name,
-          username: login,
-          email,
-          image,
-          bio: bio || "",
-        });
-      }
-      return true;
-    },
+			if (!existingUser) {
+				await writeClient.withConfig({ useCdn: false }).create({
+					_type: "author",
+					id,
+					name,
+					username: login,
+					email,
+					image,
+					bio: bio || "",
+				});
+			}
+			return true;
+		},
 
-    async jwt({ token, account, profile }) {
-      // Runs only on sign-in
-      if (account && profile) {
-        const githubId = profile?.id;
-        const user = await client.withConfig({ useCdn: false }).fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
-          id: githubId,
-        });
+		async jwt({ token, account, profile }) {
+			// Runs only on sign-in
+			if (account && profile) {
+				const githubId = profile?.id;
+				const user = await client
+					.withConfig({ useCdn: false })
+					.fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
+						id: githubId,
+					});
 
+				// Use _id (Sanity document ID) for token.id
+				token.id = user._id;
+			}
+			return token;
+		},
 
-        // Use _id (Sanity document ID) for token.id
-          token.id = user._id;
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (session.user && token.id) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    },
-  },
+		async session({ session, token }) {
+			if (session.user && token.id) {
+				session.user.id = token.id as string;
+			}
+			return session;
+		},
+	},
 });
